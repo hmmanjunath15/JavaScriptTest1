@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <script>
+        /*
+        Problem 1: 
+        Description: Implement a JavaScript class Invoice with the following properties and methods:
+        •	Properties:
+        o	invoiceNumber (string)
+        o	clientName (string)
+        o	amount (number)
+        o	dueDate (Date)
+        •	Methods:
+        o	calculateLateFee(currentDate) - Returns the late fee based on the number of days past the due date. Assume a late fee of $5 per day.
+        */
+
+        class Invoice {
+            constructor(invoiceNumber, clientName, amount, dueDate) {
+                this.invoiceNumber = invoiceNumber;
+                this.clientName = clientName;
+                this.amount = amount;
+                this.dueDate = new Date(dueDate);
+            }
+            // Method to Calicuate Late Fee 
+            calculateLateFee(currentDate) {
+                const current = new Date(currentDate);
+                const lateDays = Math.max(0, Math.ceil((current - this.dueDate) / (1000 * 60 * 60 * 24)));
+                return lateDays * 5;
+            }
+        }
+
+        const invoice = new Invoice('12345', 'John Doe', 100.00, '2025-03-31');
+
+        console.log(invoice.calculateLateFee('2025-05-05'), "Late fee Amout");
+
+
+
+        /*
+        
+        Problem 2: 
+        Description: Implement a JavaScript function manageInvoices that takes an array of Invoice objects and performs the following operations:
+        •	Filter invoices that are overdue based on the current date.
+        •	Calculate the total amount due for overdue invoices.
+        •	Sort the overdue invoices by due date.
+        Example Input
+        const invoices = [
+            new Invoice('12345', 'John Doe', 100.00, new Date('2025-03-31')),
+            new Invoice('12346', 'Jane Doe', 200.00, new Date('2025-04-01')),
+            new Invoice('12347', 'Jim Beam', 150.00, new Date('2025-03-30'))
+        ];
+        
+        */
+        // method for manageInvoices  used sort method 
+
+        function manageInvoices(invoices, currentDate) {
+            const overdueInvoices = invoices.filter(invoice => new Date(currentDate) > invoice.dueDate);
+            const totalAmountDue = overdueInvoices.reduce((total, invoice) => total + invoice.amount, 0);
+            overdueInvoices.sort((a, b) => a.dueDate - b.dueDate);
+
+
+            return {
+                overdueInvoices,
+                totalAmountDue
+            };
+
+        }
+
+        const invoices = [
+            new Invoice('12345', 'John Doe', 100.00, new Date('2025-03-31')),
+            new Invoice('12346', 'Jane Doe', 200.00, new Date('2025-04-01')),
+            new Invoice('12347', 'Jim Beam', 150.00, new Date('2025-03-30'))
+        ];
+
+        const results = manageInvoices(invoices, '2025-04-05');
+        console.log(results);
+
+
+
+        /*
+        Problem 3:
+        Description: Implement a JavaScript function generateInvoiceReport that takes an array of Invoice objects and returns a summary report in the following format:
+        {
+          "totalInvoices": <number>,
+          "totalAmountDue": <number>,
+          "overdueInvoices": <number>
+        }
+        Example Input
+        const invoices = [
+            new Invoice('12345', 'John Doe', 100.00, new Date('2025-03-31')),
+            new Invoice('12346', 'Jane Doe', 200.00, new Date('2025-04-01')),
+            new Invoice('12347', 'Jim Beam', 150.00, new Date('2025-03-30'))
+        ];
+        
+        */
+        // method to  generateInvoiceReport 
+        function generateInvoiceReport(invoices) {
+            const totalInvoices = invoices.length;
+            const totalAmountDue = invoices.reduce((total, invoice) => total + invoice.amount, 0);
+            const overdueInvoices = invoices.filter(invoice => new Date() > invoice.dueDate).length;
+
+            return {
+                totalInvoices,
+                totalAmountDue,
+                overdueInvoices
+            };
+        }
+
+        const invoicesReport = [
+            new Invoice('12345', 'John Doe', 100.00, new Date('2025-03-31')),
+            new Invoice('12346', 'Jane Doe', 200.00, new Date('2025-04-01')),
+            new Invoice('12347', 'Jim Beam', 150.00, new Date('2025-03-30'))
+        ];
+
+        const report = generateInvoiceReport(invoices);
+        console.log(report, "Summary of the reports");
+
+
+
+        /*
+        Problem 4: 
+        Description: Implement a JavaScript function extractEmails that takes an invoice text as input and returns an array of email addresses found in the text.
+        Example Input
+        const invoiceText = `Invoice #12345
+        Client: John Doe
+        Email: john.doe@example.com
+        Amount: $100.00
+        Due Date: 2025-03-31
+        Email: jane.doe@example.com`;
+        */
+
+
+        function extractEmails(invoiceText) {
+            // regular expression to validate the email  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}
+            const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+            return invoiceText.match(emailPattern) || [];
+        }
+
+
+        const invoiceText = `Invoice #12345
+                                Client: John Doe
+                                Email: john.doe@example.com
+                                Amount: $100.00
+                                Due Date: 2025-03-31
+                                Email: jane.doe@example.com`;
+
+        const result = extractEmails(invoiceText);
+        console.log(result, "Email addresses found "); 
+    </script>
+
+</body>
+
+</html>
