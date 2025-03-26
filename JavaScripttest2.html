@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h2> JavaScript TEST  2</h2>
+    <table>
+        <p>
+            Use Case 1
+        </p>
+        <thead>
+            <tr>
+                <h4>
+                    Count of Letters in invoice
+                   </h4>
+            </tr>
+        </thead>
+        <tbody id="reportOne">
+       
+        </tbody>
+    </table>
+    <table>
+        <p>
+            Use Case 2
+        </p>
+        <thead>
+            <tr>
+                <h4>
+                    Extacted Phone Numbers
+                </h4>
+            </tr>
+        </thead>
+        <tbody id="reportTwo">
+        </tbody>
+    </table>
+    <table>
+        <p>
+            Use Case 3
+        
+        </p>
+        <thead>
+            <tr>
+                <h4>
+                    FindDuplicateWords
+                </h4>
+            </tr>
+        </thead>
+        <tbody id="reportThree">
+        </tbody>
+    </table>
+    <table>
+        <p>
+            Use Case 4
+        </p>
+        <thead>
+            <tr>
+                <th>Total Invoices</th>
+                <th>Total Amount Due</th>
+                <th>Overdue Invoices</th>
+            </tr>
+        </thead>
+        <tbody id="reportFour">
+        </tbody>
+    </table>
+
+    </p>
+    <script>
+
+        /////////////////////  Problem 1: Analyze Invoice Text  /////////
+        /*    
+
+        // Description:Implement a JavaScript function analyzeInvoice that takes an invoice text as input and returns an object with the following properties: 
+
+        // lines (number) 
+
+        // words (number) 
+
+        // specialCharacters (number) 
+
+        // spaces (number) 
+
+        // digits (number) 
+
+        // englishCharacters (number) 
+
+        // nonEnglishCharacters (number) 
+
+        // Example Input 
+
+        // const invoiceText = `Invoice #12345 
+
+        // Client: John Doe 
+
+        // Amount: $100.00 
+
+        // Due Date: 2025-03-31`;  */
+
+
+        function analyzeInvoice(invoiceText) {
+            const lines = invoiceText.split('\n').length;
+            const words = invoiceText.split(/\s+/).filter(word => word.length > 0).length;
+            const specialCharacters = (invoiceText.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length;
+            const spaces = (invoiceText.match(/\s/g) || []).length;
+            const digits = (invoiceText.match(/\d/g) || []).length;
+            const englishCharacters = (invoiceText.match(/[a-zA-Z]/g) || []).length;
+
+            return {
+                lines,
+                words,
+                specialCharacters,
+                spaces,
+                digits,
+                englishCharacters,
+            };
+        }
+
+
+
+
+        const invoiceText = `Invoice #12345 
+
+        Client: John Doe 
+
+        Amount: $100.00 
+
+        Due Date: 2025-03-31`;
+
+        const analysis = analyzeInvoice(invoiceText);
+        console.log(analysis);
+
+    /////////////// code to print the OutPut in HTML view ////
+
+        const reportOne = document.getElementById('reportOne');
+        const rowOne = document.createElement('tr');
+        rowOne.innerHTML = `
+            <td>  Digits ${analysis.digits}</td> ,
+            <td>  English Characters ${analysis.englishCharacters}</td>,
+            <td>  lines ${analysis.lines}</td> ,
+            <td>  Spaces ${analysis.spaces}</td> ,
+            <td>  Special Characters ${analysis.specialCharacters}</td>,
+            <td>  Words ${analysis.words}</td>
+
+        `;
+        reportOne.appendChild(rowOne);
+
+        ///     Problem 2: Extract Phone Numbers ///
+
+
+        /*Description: Implement a JavaScript function extractPhoneNumbers that takes an invoice text as input and returns an array of phone numbers in international format (e.g., +1 123-456-7890). 
+        
+        Example Input 
+        
+        const invoiceText = `Invoice #12345 
+        
+        Client: John Doe 
+        
+        Phone: +1 123-456-7890 
+        
+        Amount: $100.00 
+        
+        Due Date: 2025-03-31 
+        
+        Phone: +44 1234-567-890`;  */
+
+
+
+
+        function extractPhoneNumbers(invoiceNumber) {
+            // regular expression to validate the phone Number '1?\W*([2-9][0-8][0-9])\W*([2-9][0-9]{2})\W*([0-9]{4})(\se?x?t?(\d*))?'
+            const nmberPattern = '1?\W*([2-9][0-8][0-9])\W*([2-9][0-9]{2})\W*([0-9]{4})(\se?x?t?(\d*))?';
+            if (invoiceNumber) {
+                return invoiceNumber.match(nmberPattern) | [];
+            }
+            else {
+                console.log("Number Not Found")
+            }
+
+        }
+
+        const invoiceNumber = `Invoice #12345 
+
+                            Client: John Doe 
+
+                            Phone: +1 123-456-7890 
+
+                            Amount: $100.00 
+
+                            Due Date: 2025-03-31 
+
+                            Phone: +44 1234-567-890`;
+
+        const result = extractPhoneNumbers(invoiceNumber);
+        console.log(result, "Phone Number found ");
+        /////////////// code to print the OutPut in HTML view ////
+
+        const reportTwo = document.getElementById('reportTwo');
+        const rowTwo = document.createElement('tr');
+        rowTwo.innerHTML = `
+            <td>${result}</td>
+        `;
+        reportTwo.appendChild(rowTwo);
+        //////////////// Problem 3: Find Duplicate Words  ////////////////////
+
+        /* Description: Implement a JavaScript function findDuplicateWords that takes an invoice text as input and returns an array of duplicate words found in the text.
+        
+        Example Input
+        
+        const invoiceText = `Invoice #12345
+        
+        Client: John Doe
+        
+        Amount: $100.00
+        
+        Due Date: 2025-03-31
+        
+        Client: Jane Doe`;  */
+
+
+
+        function findDuplicateWords(Text) {
+            const words = Text.toLowerCase().match(/\b\w+\b/g);
+            const wordCount = {};
+            const duplicates = [];
+
+            words.forEach(word => {
+                wordCount[word] = (wordCount[word] || 0) + 1;
+            });
+
+            for (const word in wordCount) {
+                if (wordCount[word] > 1) {
+                    duplicates.push(word);
+                }
+            }
+
+            return duplicates;
+        }
+
+
+        const invoiceTextDuplicate = `Invoice #12345
+
+Client: John Doe
+
+Amount: $100.00
+
+Due Date: 2025-03-31
+
+Client: Jane Doe`;
+
+        const duplicateWords = findDuplicateWords(invoiceTextDuplicate);
+        console.log(duplicateWords);
+            /////////////// code to print the OutPut in HTML view ////
+
+        const reportThree = document.getElementById('reportThree');
+        const rowThree = document.createElement('tr');
+        rowThree.innerHTML = `
+            <td>${duplicateWords}</td>,
+            <td>Number of Duplicate words ${duplicateWords.length}</td>
+        `;
+        reportThree.appendChild(rowThree);
+        ////////////////////  Problem 4: Generate Invoice  /////////////////// 
+
+
+
+
+        /*   Description: Implement a JavaScript function generateInvoiceReport that takes an array of Invoice objects and returns a summary report in the following format:
+      
+      { 
+      
+        "totalInvoices": <number>, 
+      
+        "totalAmountDue": <number>, 
+      
+        "overdueInvoices": <number> 
+      
+      } 
+      
+      Example Input 
+      
+      const invoices = [ 
+      
+          new Invoice('12345', 'John Doe', 100.00, new Date('2025-03-31')), 
+      
+          new Invoice('12346', 'Jane Doe', 200.00, new Date('2025-04-01')), 
+      
+          new Invoice('12347', 'Jim Beam', 150.00, new Date('2025-03-30')) 
+      
+      ]; 
+      
+       */
+        class Invoice {
+            constructor(invoiceNumber, clientName, amount, dueDate) {
+                this.invoiceNumber = invoiceNumber;
+                this.clientName = clientName;
+                this.amount = amount;
+                this.dueDate = new Date(dueDate);
+            }
+        }
+
+        ///////////// Method  generateInvoiceReport   /////////// 
+        function generateInvoiceReport(invoices) {
+            const totalInvoices = invoices.length;
+            const totalAmountDue = invoices.reduce((total, invoice) => total + invoice.amount, 0);
+            const overdueInvoices = invoices.filter(invoice => new Date() > invoice.dueDate).length;
+
+            return {
+                totalInvoices,
+                totalAmountDue,
+                overdueInvoices
+            };
+        }
+        const invoices = [
+            new Invoice('12345', 'John Doe', 100.00, new Date('2025-03-31')),
+            new Invoice('12346', 'Jane Doe', 200.00, new Date('2025-04-01')),
+            new Invoice('12347', 'Jim Beam', 150.00, new Date('2025-03-30'))
+        ];
+
+        const report = generateInvoiceReport(invoices);
+        /// consoles to print the output /////////
+
+        console.log(report, "Summary of the reports");
+        console.log(report.totalInvoices, "Total Amount Due");
+        console.log(report.totalAmountDue, "Total Amount Due");
+        console.log(report.overdueInvoices, "Total Amount Due");
+
+        /////////////// code to print the OutPut in HTML view ////
+
+        const reportFour = document.getElementById('reportFour');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${report.totalInvoices}</td>
+            <td>${report.totalAmountDue.toFixed(2)}</td>
+            <td>${report.overdueInvoices}</td>
+        `;
+        reportFour.appendChild(row);
+    </script>
+
+</body>
+
+</html>
